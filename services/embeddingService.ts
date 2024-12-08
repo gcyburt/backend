@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { chunkText } from './utils/utils';
+import { chunkText } from '../utils/utils';
 import { QdrantClient } from '@qdrant/js-client-rest';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs/promises';

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import prisma from './prismaService';
-
+import User from '../models/User';
 
 export const authenticateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { username, password } = req.body;
@@ -9,7 +9,7 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
     try {
         const user = await prisma.user.findUnique({
             where: { username },
-        });
+        }) as User | null;
 
         if (!user) {
             res.status(401).json({ message: 'Invalid username or password' });
@@ -37,7 +37,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 
         const existingUser = await prisma.user.findUnique({
             where: { username }
-        });
+        }) as User | null;
 
         if (existingUser) {
             res.status(400).json({ message: 'Username already exists' });
@@ -53,7 +53,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
                 email,
                 accessLevel: accessRole,
             },
-        });
+        }) as User;
 
         res.status(201).json({ message: 'User registered' });
     } catch (error) {
