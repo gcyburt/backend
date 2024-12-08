@@ -9,6 +9,12 @@ export const getItem = async (req: Request, res: Response, next: NextFunction): 
     const { id } = req.body;
 }
 
+export const getAllItems = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const result = await neo4jService.query('MATCH (item:Item) RETURN item', {});
+    const items = result.records.map((record: any) => record.get('item').properties);
+    res.status(200).json(items);
+}
+
 export const addItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { id, name, description }: Item = req.body;
 

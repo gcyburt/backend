@@ -1,9 +1,12 @@
-import { Router } from "express";
-import { getItem, addItem, updateItem, deleteItem, addBom, addProductionSettings, updateProductionSettings, getProductionSettings } from "../services/itemsService";
+import express from 'express';
 
-const router = Router();
+import { getItem, addItem, addBom, addProductionSettings, updateProductionSettings, getProductionSettings, updateItem, deleteItem, getAllItems } from '../services/itemsService';
+
+const router = express.Router();
 
 router.post('/get', getItem);
+
+router.post('/getAll', getAllItems);
 
 router.post('/add', addItem);
 
