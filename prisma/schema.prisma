@@ -23,3 +23,14 @@ model User {
   email String @unique
   accessLevel String
 }
+
+model ItemProductionSettings {
+  id String @id @default(cuid())
+  itemId String
+  itemVersion String
+  equipment String
+  speed String
+  efficiency String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
