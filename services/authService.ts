@@ -7,11 +7,13 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
     const { username, password } = req.body;
 
     try {
+        console.log('🔑 Authenticating user:', username);
         const user = await prisma.user.findUnique({
             where: { username },
         }) as User | null;
 
         if (!user) {
+            console.log('❌ Invalid username or password');
             res.status(401).json({ message: 'Invalid username or password' });
             return;
         }
@@ -19,12 +21,15 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
+            console.log('❌ Invalid username or password');
             res.status(401).json({ message: 'Invalid username or password' });
             return;
         }
 
+        console.log('✅ User authenticated successfully');
         res.status(200).json({ message: 'User authenticated' });
     } catch (error) {
+        console.error('❌ Error during authentication:', error);
         next(error);
     }
 };
@@ -33,6 +38,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
     const { username, password, name, surname, email, accessRole } = req.body;
 
     try {
+        console.log('📝 Registering new user:', username);
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const existingUser = await prisma.user.findUnique({
@@ -40,6 +46,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
         }) as User | null;
 
         if (existingUser) {
+            console.log('⚠️ Username already exists:', username);
             res.status(400).json({ message: 'Username already exists' });
             return;
         }
@@ -55,8 +62,10 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
             },
         }) as User;
 
+        console.log('✅ User registered successfully');
         res.status(201).json({ message: 'User registered' });
     } catch (error) {
+        console.error('❌ Error during registration:', error);
         next(error);
     }
 };
@@ -81,7 +90,7 @@ export const getUserProfile = async (req: Request, res: Response, next: NextFunc
             return;
         }
 
-        res.status(200).json({ user });
+        res.status(200).json(user);
     } catch (error) {
         next(error);
     }
